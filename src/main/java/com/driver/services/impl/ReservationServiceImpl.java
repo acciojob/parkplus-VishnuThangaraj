@@ -38,27 +38,15 @@ public class ReservationServiceImpl implements ReservationService {
             int cost = timeInHours * spots.getPricePerHour();
 
             if(!spots.getOccupied()){
-                if(numberOfWheels == 2){
-                    if(cost < minCost){
-                        minCost = cost;
-                        spot = spots;
-                    }
+                if(numberOfWheels == 4){
+                    if(spots.getSpotType() == SpotType.TWO_WHEELER) continue;
                 }
-                else if(numberOfWheels == 4){
-                    if(spots.getSpotType() == SpotType.FOUR_WHEELER || spots.getSpotType() == SpotType.OTHERS){
-                        if(cost < minCost){
-                            minCost = cost;
-                            spot = spots;
-                        }
-                    }
+                else if(numberOfWheels > 4){
+                    if(spots.getSpotType() != SpotType.OTHERS) continue;
                 }
-                else{
-                    if(spots.getSpotType() == SpotType.OTHERS){
-                        if(cost < minCost){
-                            minCost = cost;
-                            spot = spots;
-                        }
-                    }
+                if(cost < minCost){
+                    minCost = cost;
+                    spot = spots;
                 }
             }
 
