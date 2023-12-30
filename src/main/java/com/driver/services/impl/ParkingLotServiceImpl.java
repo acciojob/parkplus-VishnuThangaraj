@@ -89,9 +89,8 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
         if(parkingLot != null){
             parkingLot.getSpotList().forEach(spot -> spotRepository1.deleteById(spot.getId()));
-
-            parkingLotRepository1.deleteById(parkingLotId);
         }
 
+        parkingLotRepository1.deleteById(parkingLotId);
     }
 }
