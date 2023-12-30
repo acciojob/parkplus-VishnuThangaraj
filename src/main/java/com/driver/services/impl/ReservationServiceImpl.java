@@ -26,11 +26,8 @@ public class ReservationServiceImpl implements ReservationService {
         User user = userRepository3.findById(userId).orElse(null);
         ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
-        if(user == null){
-            return null;
-        }
-
-        if(parkingLot == null) return null;
+        if(user == null || parkingLot == null)
+            throw new Exception("Cannot make reservation");
 
         Reservation reservation = new Reservation();
 
@@ -68,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         if(spot == null)
-            return null;
+            throw new Exception("Cannot make reservation");
 
         reservation.setSpot(spot);
         reservation.setUser(user);
