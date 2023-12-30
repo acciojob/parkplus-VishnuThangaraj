@@ -23,6 +23,59 @@ public class ReservationServiceImpl implements ReservationService {
     ParkingLotRepository parkingLotRepository3;
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
+        User user = userRepository3.findById(userId).orElse(null);
+        ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
+        if(user == null || parkingLot == null)
+            throw new Exception("Cannot make reservation");
+
+        Reservation reservation = new Reservation();
+
+        // Find the minimum cost spot
+        Spot spot = null;
+        int minCost = Integer.MAX_VALUE;
+        for(Spot spots : parkingLot.getSpotList()){
+            int cost = timeInHours * spots.getPricePerHour();
+
+            if(!spots.isOccupied()){
+                if(numberOfWheels == 2){
+                    if(cost < minCost){
+                        minCost = cost;
+                        spot = spots;
+                    }
+                }
+                else if(numberOfWheels == 4){
+                    if(spots.getSpotType() == SpotType.FOUR_WHEELER || spots.getSpotType() == SpotType.OTHERS){
+                        if(cost < minCost){
+                            minCost = cost;
+                            spot = spots;
+                        }
+                    }
+                }
+                else{
+                    if(spots.getSpotType() == SpotType.OTHERS){
+                        if(cost < minCost){
+                            minCost = cost;
+                            spot = spots;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        if(spot == null)
+            throw new Exception("Cannot make reservation");
+
+        reservation.setSpot(spot);
+        reservation.setUser(user);
+
+        reservationRepository3.save(reservation);
+
+        spot.setOccupied(true);
+        spot.getReservationList().add(reservation);
+        spotRepository3.save(spot);
+
+        return reservation;
     }
 }
