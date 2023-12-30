@@ -58,15 +58,13 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     @Override
     public void deleteSpot(int spotId) {
         Spot spot = spotRepository1.findById(spotId).orElse(null);
+        assert spot != null;
         ParkingLot parkingLot = parkingLotRepository1.findById(spot.getParkingLot().getId())
                 .orElse(null);
 
-        List<Spot> spots = parkingLot.getSpotList();
-        IntStream.range(0, spots.size()).filter(index -> spots.get(index).
-                getId() == spotId).findFirst().ifPresent(spots::remove);
-        parkingLot.setSpotList(spots);
+        assert parkingLot != null;
+        parkingLot.getSpotList().remove(spot);
         parkingLotRepository1.save(parkingLot);
-
         spotRepository1.deleteById(spotId);
     }
 
@@ -89,8 +87,11 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     public void deleteParkingLot(int parkingLotId) {
         ParkingLot parkingLot = parkingLotRepository1.findById(parkingLotId).orElse(null);
 
-        parkingLot.getSpotList().forEach(spot -> spotRepository1.deleteById(spot.getId()));
+        if(parkingLot != null){
+            parkingLot.getSpotList().forEach(spot -> spotRepository1.deleteById(spot.getId()));
 
-        parkingLotRepository1.deleteById(parkingLotId);
+            parkingLotRepository1.deleteById(parkingLotId);
+        }
+
     }
 }
