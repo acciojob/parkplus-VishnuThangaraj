@@ -65,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         if(spot == null)
-            throw new Exception("Cannot make reservation");
+            return null;
 
         reservation.setSpot(spot);
         reservation.setUser(user);
