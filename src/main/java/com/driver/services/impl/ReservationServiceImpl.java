@@ -37,7 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
         for(Spot spots : parkingLot.getSpotList()){
             int cost = timeInHours * spots.getPricePerHour();
 
-            if(!spots.isOccupied()){
+            if(!spots.getOccupied()){
                 if(numberOfWheels == 2){
                     if(cost < minCost){
                         minCost = cost;
