@@ -46,7 +46,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         }
 
 
-        spotRepository1.save(spot); // Save to Database
+        //spotRepository1.save(spot); // Save to Database
 
         parkingLot.getSpotList().add(spot);
         parkingLotRepository1.save(parkingLot); // Save to Database
