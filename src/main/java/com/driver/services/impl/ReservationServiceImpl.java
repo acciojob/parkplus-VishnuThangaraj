@@ -25,10 +25,11 @@ public class ReservationServiceImpl implements ReservationService {
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception{
         User user;
         user = userRepository3.findById(userId).orElse(null);
+        if(user == null) throw new Exception("Cannot make reservation");
         ParkingLot parkingLot;
         parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
-        assert (user != null) || (parkingLot != null) : "Cannot make reservation";
+        if (parkingLot == null) throw new Exception("Cannot make reservation");
 
         Reservation reservation = new Reservation();
 
@@ -53,7 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         }
 
-        assert (spot == null) : "Cannot make reservation";
+        if (spot == null) throw new Exception("Cannot make reservation");
 
         reservation.setSpot(spot);
         reservation.setUser(user);
