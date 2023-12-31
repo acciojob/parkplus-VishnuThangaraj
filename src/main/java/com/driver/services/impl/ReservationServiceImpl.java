@@ -27,7 +27,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
         if(user == null || parkingLot == null)
-            throw new Exception("Cannot make reservation");
+            return null;
 
         Reservation reservation = new Reservation();
 
