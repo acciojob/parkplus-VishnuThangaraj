@@ -28,42 +28,46 @@ public class ReservationServiceImpl implements ReservationService {
         if(user == null) throw new Exception("Cannot make reservation");
         ParkingLot parkingLot;
         parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
+        Reservation reservation = new Reservation();
 
         if (parkingLot == null) throw new Exception("Cannot make reservation");
 
-        Reservation reservation = new Reservation();
+        else {
 
-        // Find the minimum cost spot
-        Spot spot = null;
-        int minCost = Integer.MAX_VALUE;
-        for(Spot spots : parkingLot.getSpotList()){
-            int cost = timeInHours * spots.getPricePerHour();
 
-            if(!spots.getOccupied()){
-                if(numberOfWheels == 4){
-                    if(spots.getSpotType() == SpotType.TWO_WHEELER) continue;
+            // Find the minimum cost spot
+            Spot spot = null;
+            int minCost = Integer.MAX_VALUE;
+            for (Spot spots : parkingLot.getSpotList()) {
+                int cost = timeInHours * spots.getPricePerHour();
+
+                if (!spots.getOccupied()) {
+                    if (numberOfWheels == 4) {
+                        if (spots.getSpotType() == SpotType.TWO_WHEELER) continue;
+                    } else if (numberOfWheels > 4) {
+                        if (spots.getSpotType() != SpotType.OTHERS) continue;
+                    }
+                    if (cost < minCost) {
+                        minCost = cost;
+                        spot = spots;
+                    }
                 }
-                else if(numberOfWheels > 4){
-                    if(spots.getSpotType() != SpotType.OTHERS) continue;
-                }
-                if(cost < minCost){
-                    minCost = cost;
-                    spot = spots;
-                }
+
             }
 
+            if (spot == null) throw new Exception("Cannot make reservation");
+
+            else {
+                reservation.setSpot(spot);
+                reservation.setUser(user);
+
+                reservationRepository3.save(reservation);
+
+                spot.setOccupied(true);
+                spot.getReservationList().add(reservation);
+                spotRepository3.save(spot);
+            }
         }
-
-        if (spot == null) throw new Exception("Cannot make reservation");
-
-        reservation.setSpot(spot);
-        reservation.setUser(user);
-
-        reservationRepository3.save(reservation);
-
-        spot.setOccupied(true);
-        spot.getReservationList().add(reservation);
-        spotRepository3.save(spot);
 
         return reservation;
     }
