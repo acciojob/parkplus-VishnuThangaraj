@@ -39,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
                 } else if (spot.getSpotType() == SpotType.FOUR_WHEELER) {
                     wheel = 4;
                 } else if (spot.getSpotType() == SpotType.OTHERS) {
-                    wheel = 100;
+                    wheel = 99;
                 }
                 if (spot.getOccupied() == false && wheel > numberOfWheels && spot.getPricePerHour() < price) {
                     spot1 = spot;
@@ -55,7 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
             user.getReservationList().add(reservation);
             spot1.getReservationList().add(reservation);
             spotRepository3.save(spot1);
-            reservationRepository3.save(reservation);
+            //reservationRepository3.save(reservation);
             userRepository3.save(user);
             return reservation;
         }
