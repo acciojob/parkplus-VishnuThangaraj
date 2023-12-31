@@ -28,7 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
         ParkingLot parkingLot;
         parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
-        assert user != null && parkingLot != null : "Cannot make reservation";
+        assert (user != null) || (parkingLot != null) : "Cannot make reservation";
 
         Reservation reservation = new Reservation();
 
@@ -53,7 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         }
 
-        assert spot == null : "Cannot make reservation";
+        assert (spot == null) : "Cannot make reservation";
 
         reservation.setSpot(spot);
         reservation.setUser(user);
