@@ -24,6 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception{
         Reservation reservation = null;
+        Spot spot = null;
         User user = userRepository3.findById(userId).orElse(null);
         ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).orElse(null);
 
@@ -32,7 +33,6 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         // Find the minimum cost spot
-        Spot spot = null;
         int minCost = Integer.MAX_VALUE;
         for(Spot spots : parkingLot.getSpotList()){
             int cost = timeInHours * spots.getPricePerHour();
