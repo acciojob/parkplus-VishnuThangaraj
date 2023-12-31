@@ -28,28 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setNumberOfHours(timeInHours);
             User user = userRepository3.findById(userId).get();
             ParkingLot parkingLot = parkingLotRepository3.findById(parkingLotId).get();
-            List<Spot> spotList = parkingLot.getSpotList();
-            //boolean spotAvailable=false;
-            Spot spot1 = null;
-            int price = Integer.MAX_VALUE;
-            for (Spot spot : spotList) {
-                int wheel = 0;
-                if (spot.getSpotType() == SpotType.TWO_WHEELER) {
-                    wheel = 2;
-                } else if (spot.getSpotType() == SpotType.FOUR_WHEELER) {
-                    wheel = 4;
-                } else if (spot.getSpotType() == SpotType.OTHERS) {
-                    wheel = 99;
-                }
-                if (spot.getOccupied() == false && wheel > numberOfWheels && spot.getPricePerHour() < price) {
-                    spot1 = spot;
-                    price = spot.getPricePerHour();
-                }
-            }
-            if (spot1 == null) {
-                throw new Exception();
-            }
-            spot1.setOccupied(true);
+            Spot spot1 = getSpot(numberOfWheels, parkingLot);
             reservation.setSpot(spot1);
             reservation.setUser(user);
             user.getReservationList().add(reservation);
@@ -62,5 +41,30 @@ public class ReservationServiceImpl implements ReservationService {
         catch(Exception e){
             return null;
         }
+    }
+
+    private static Spot getSpot(Integer numberOfWheels, ParkingLot parkingLot) throws Exception {
+        List<Spot> spotList = parkingLot.getSpotList();
+        Spot spot1 = null;
+        int price = Integer.MAX_VALUE;
+        for (Spot spot : spotList) {
+            int wheel = 0;
+            if (spot.getSpotType() == SpotType.TWO_WHEELER) {
+                wheel = 2;
+            } else if (spot.getSpotType() == SpotType.FOUR_WHEELER) {
+                wheel = 4;
+            } else if (spot.getSpotType() == SpotType.OTHERS) {
+                wheel = 99;
+            }
+            if (spot.getOccupied() == false && wheel > numberOfWheels && spot.getPricePerHour() < price) {
+                spot1 = spot;
+                price = spot.getPricePerHour();
+            }
+        }
+        if (spot1 == null) {
+            throw new Exception();
+        }
+        spot1.setOccupied(true);
+        return spot1;
     }
 }
